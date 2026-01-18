@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games - LuckyBot NZ Social Casino</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cyan: #00f0ff;
+            --purple: #b400ff;
+            --green: #00ff88;
+            --black: #0a0a0f;
+            --dark: #1a1a2e;
+            --gray: #16213e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--black);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(180, 0, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover .nav-icon svg {
+            fill: var(--cyan);
+            filter: drop-shadow(0 0 5px var(--cyan));
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--cyan);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 80%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--cyan);
+            text-shadow: 0 0 10px var(--cyan);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            min-width: 180px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--cyan);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .page-header {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(180, 0, 255, 0.1));
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .games-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: rgba(26, 26, 46, 0.6);
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            color: #fff;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active,
+        .tab-btn:hover {
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border-color: transparent;
+            color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .game-item {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(180, 0, 255, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-item:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--purple);
+            box-shadow: 0 15px 40px rgba(180, 0, 255, 0.4);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(180, 0, 255, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-image::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .game-info {
+            padding: 1.5rem;
+        }
+
+        .game-info h3 {
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .game-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .play-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border: none;
+            color: var(--black);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Game Container Styles */
+        .game-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 2rem auto;
+            max-width: 1400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .game-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 15px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 215, 0, 0.3);
+            border-top: 5px solid #ffd700;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: #ffd700;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            color: white;
+            border: 2px solid #ffd700;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .control-button:hover {
+            background: linear-gradient(145deg, #ffd700, #f39c12);
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--cyan);
+            padding-left: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="LuckyBot Logo">
+                <span>LuckyBot</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>Home</a></li>
+                <li><a href="games.html" class="active">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V7h2v2zm8-2v2h-2V7h2zm4 7.5c0 .83-.67 1.5-1.5 1.5S20 15.33 20 14.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm-4-4c0 .83-.67 1.5-1.5 1.5S16 11.33 16 10.5 16.67 9 17.5 9 19 9.67 19 10.5zM3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 14H5V5h14v14z"/></svg></span>🎮 Games</a></li>
+                <li class="dropdown">
+                    <a href="bots.html">
+                        <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></span>Bots</a>
+                    <div class="dropdown-content">
+                        <a href="alpha-bot.html">Alpha Bot</a>
+                        <a href="beta-bot.html">Beta Bot</a>
+                    </div>
+                </li>
+                <li><a href="rewards.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>Rewards</a></li>
+                <li><a href="support.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></span>Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>🎮 Our Game Collection</h1>
+        <p>Discover hundreds of social casino games designed for entertainment. No real money, pure fun!</p>
+    </div>
+
+    <div class="games-container">
+        <div class="category-tabs">
+            <button class="tab-btn active" data-category="all">All Games</button>
+            <button class="tab-btn" data-category="slots">🎰 Slots</button>
+            <button class="tab-btn" data-category="challenges">🧠 AI Challenges</button>
+            <button class="tab-btn" data-category="tournaments">🏆 Tournaments</button>
+        </div>
+
+        <div class="games-grid" id="gamesGrid">
+            <div class="game-item" data-category="slots">
+                <div class="game-image">🎰</div>
+                <div class="game-info">
+                    <h3>Neon Reels</h3>
+                    <p>Classic slots with a futuristic twist</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.8</span>
+                        <span>🎮 Easy</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="slots">
+                <div class="game-image">💎</div>
+                <div class="game-info">
+                    <h3>Diamond Rush</h3>
+                    <p>Match gems and win big rewards</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.9</span>
+                        <span>🎮 Medium</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="challenges">
+                <div class="game-image">🤖</div>
+                <div class="game-info">
+                    <h3>Bot Battle Arena</h3>
+                    <p>Challenge AI bots in strategic games</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.7</span>
+                        <span>🎮 Hard</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='ai-challenges.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="challenges">
+                <div class="game-image">🧠</div>
+                <div class="game-info">
+                    <h3>AI Strategy Challenge</h3>
+                    <p>Test your skills against advanced AI</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.6</span>
+                        <span>🎮 Hard</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='ai-challenges.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="tournaments">
+                <div class="game-image">🏆</div>
+                <div class="game-info">
+                    <h3>Weekly Championship</h3>
+                    <p>Compete for the top spot</p>
+                    <div class="game-stats">
+                        <span>⭐ 5.0</span>
+                        <span>🎮 All Levels</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='social-tournaments.html'">Join Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="tournaments">
+                <div class="game-image">⚡</div>
+                <div class="game-info">
+                    <h3>Lightning League</h3>
+                    <p>Fast-paced tournament action</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.8</span>
+                        <span>🎮 Medium</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='social-tournaments.html'">Join Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="slots">
+                <div class="game-image">🌟</div>
+                <div class="game-info">
+                    <h3>Stellar Spins</h3>
+                    <p>Space-themed slot adventure</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.7</span>
+                        <span>🎮 Easy</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="slots">
+                <div class="game-image">🔥</div>
+                <div class="game-info">
+                    <h3>Fire Fortune</h3>
+                    <p>Hot slots with bonus rounds</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.9</span>
+                        <span>🎮 Medium</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+
+            <div class="game-item" data-category="challenges">
+                <div class="game-image">🎯</div>
+                <div class="game-info">
+                    <h3>Precision Challenge</h3>
+                    <p>Test your accuracy and timing</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.5</span>
+                        <span>🎮 Medium</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='ai-challenges.html'">Play Now</button>
+                </div>
+            </div>
+            <div class="game-item" data-category="slots">
+                <div class="game-image">⚡</div>
+                <div class="game-info">
+                    <h3>Thunder Strike</h3>
+                    <p>Electric energy powers your wins</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.6</span>
+                        <span>🎮 Easy</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+            <div class="game-item" data-category="slots">
+                <div class="game-image">🌙</div>
+                <div class="game-info">
+                    <h3>Moonlight Magic</h3>
+                    <p>Mystical adventures under the moon</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.8</span>
+                        <span>🎮 Medium</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='slots.html'">Play Now</button>
+                </div>
+            </div>
+            <div class="game-item" data-category="challenges">
+                <div class="game-image">⚔️</div>
+                <div class="game-info">
+                    <h3>Duel Masters</h3>
+                    <p>Strategic battles with AI opponents</p>
+                    <div class="game-stats">
+                        <span>⭐ 4.7</span>
+                        <span>🎮 Hard</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='ai-challenges.html'">Play Now</button>
+                </div>
+            </div>
+            <div class="game-item" data-category="tournaments">
+                <div class="game-image">👑</div>
+                <div class="game-info">
+                    <h3>Royal Championship</h3>
+                    <p>Elite tournament for top players</p>
+                    <div class="game-stats">
+                        <span>⭐ 5.0</span>
+                        <span>🎮 Expert</span>
+                    </div>
+                    <button class="play-btn" onclick="window.location.href='social-tournaments.html'">Join Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Player Container -->
+    <div class="game-container">
+        <div class="game-wrapper">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading Game...</div>
+            </div>
+            <iframe 
+                id="gameFrame"
+                class="game-iframe"
+                src="https://asccw.playngonetwork.com/casino/ContainerLauncher?pid=2&gid=templeoftollan&lang=en_GB&practice=1&channel=desktop&demo=2"
+                allow="fullscreen"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <div class="game-controls">
+            <button class="control-button" onclick="refreshGame()">🔄 Refresh Game</button>
+            <button class="control-button" onclick="toggleSound()">🔊 Sound</button>
+            <button class="control-button" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+        </div>
+    </div>
+
+    <section class="popular-games-section" style="padding: 4rem 2rem; background: rgba(26, 26, 46, 0.3); margin-top: 4rem;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; background: linear-gradient(135deg, var(--cyan), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🔥 Most Popular This Week</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                    <div style="position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, var(--green), var(--cyan)); color: var(--black); padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">#1</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🎰</div>
+                    <h3 style="color: var(--green); margin-bottom: 0.5rem;">Neon Reels</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">12,450 plays this week</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                    <div style="position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, var(--green), var(--cyan)); color: var(--black); padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">#2</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🤖</div>
+                    <h3 style="color: var(--green); margin-bottom: 0.5rem;">Bot Battle Arena</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">9,820 plays this week</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 2rem; text-align: center; position: relative;">
+                    <div style="position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, var(--green), var(--cyan)); color: var(--black); padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">#3</div>
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                    <h3 style="color: var(--green); margin-bottom: 0.5rem;">Weekly Championship</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;">7,340 participants</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="game-categories-section" style="padding: 4rem 2rem; max-width: 1400px; margin: 4rem auto;">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Game Categories</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 2rem; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                <h3 style="color: var(--purple); font-size: 1.8rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 2rem;">🎰</span> Classic Slots
+                </h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8;">Traditional slot games with modern graphics. Perfect for beginners and experienced players alike.</p>
+                <div style="margin-top: 1.5rem; color: var(--cyan); font-weight: bold;">150+ Games →</div>
+            </div>
+            <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 240, 255, 0.3); border-radius: 15px; padding: 2rem; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--cyan)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(0, 240, 255, 0.3)'">
+                <h3 style="color: var(--cyan); font-size: 1.8rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 2rem;">🧠</span> AI Challenges
+                </h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8;">Test your skills against intelligent AI opponents. Learn and improve with adaptive difficulty levels.</p>
+                <div style="margin-top: 1.5rem; color: var(--cyan); font-weight: bold;">50+ Challenges →</div>
+            </div>
+            <div style="background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 2rem; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-10px)'; this.style.borderColor='var(--green)'" onmouseout="this.style.transform='translateY(0)'; this.style.borderColor='rgba(0, 255, 136, 0.3)'">
+                <h3 style="color: var(--green); font-size: 1.8rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 2rem;">🏆</span> Tournaments
+                </h3>
+                <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8;">Compete with players from New Zealand. Weekly and monthly tournaments with great rewards.</p>
+                <div style="margin-top: 1.5rem; color: var(--cyan); font-weight: bold;">20+ Active →</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="games.html">Games</a>
+                <a href="bots.html">Bots</a>
+                <a href="rewards.html">Rewards</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">📜 Terms</a>
+                <a href="privacy.html">🔒 Privacy</a>
+                <a href="bot-ethics.html">🤖 Bot Ethics</a>
+                <a href="responsible-gaming.html">🧠 Responsible Gaming</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="support.html">Support Center</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.social.html">Contact Us</a>
+            </div>
+            <div class="footer-section">
+                <h4>🇳🇿 NZ Compliance</h4>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">Social Casino - No Real Money. 18+ only.</p>
+            </div>
+        </div>
+        <div class="responsible-links" style="text-align: center; padding: 2rem 0; border-top: 1px solid rgba(0, 240, 255, 0.2); margin-top: 2rem;">
+            <a href="https://gamblinghelpline.co.nz/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Gambling Helpline New Zealand
+            </a>
+            <a href="https://responsiblegambling.org/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Responsible Gambling New Zealand
+            </a>
+            <a href="https://www.health.govt.nz/regulation-legislation/mental-health-and-addiction/gambling-act" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                New Zealand Ministry of Health – Gambling & Addiction
+            </a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LuckyBot. All rights reserved. | New Zealand Social Casino Platform</p>
+        </div>
+    </footer>
+
+    <script>
+        let soundEnabled = true;
+        let gameLoaded = false;
+
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+
+        // Tab filtering
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const gameItems = document.querySelectorAll('.game-item');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const category = this.getAttribute('data-category');
+                gameItems.forEach(item => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 10);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Handle iframe loading
+        document.getElementById('gameFrame').addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.display = 'none';
+                gameLoaded = true;
+            }, 2000);
+        });
+
+        // Refresh game function
+        function refreshGame() {
+            const gameFrame = document.getElementById('gameFrame');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            loadingOverlay.style.display = 'flex';
+            gameLoaded = false;
+            
+            gameFrame.src = gameFrame.src;
+        }
+
+        // Fullscreen functionality
+        function toggleFullscreen() {
+            const overlay = document.getElementById('gameFrame');
+            
+            if (overlay.requestFullscreen) {
+                overlay.requestFullscreen();
+            } else if (overlay.webkitRequestFullscreen) {
+                overlay.webkitRequestFullscreen();
+            } else if (overlay.msRequestFullscreen) {
+                overlay.msRequestFullscreen();
+            }
+        }
+
+        // Sound toggle function
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const button = event.target;
+            button.textContent = soundEnabled ? '🔊 Sound' : '🔇 Sound';
+            
+            try {
+                const gameFrame = document.getElementById('gameFrame');
+                if (gameFrame.contentWindow) {
+                    gameFrame.contentWindow.postMessage({
+                        action: 'toggleSound',
+                        enabled: soundEnabled
+                    }, '*');
+                }
+            } catch (e) {
+                console.log('Cannot control iframe sound due to CORS restrictions');
+            }
+        }
+
+        // Add floating particle effect
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            setInterval(createParticles, 3000);
+        });
+
+        function createParticles() {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.innerHTML = ['⚡', '💫', '✨', '🌟'][Math.floor(Math.random() * 4)];
+                    particle.style.position = 'fixed';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = window.innerHeight + 'px';
+                    particle.style.fontSize = Math.random() * 20 + 15 + 'px';
+                    particle.style.pointerEvents = 'none';
+                    particle.style.zIndex = '1';
+                    particle.style.animation = 'floatUp 4s ease-out forwards';
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 4000);
+                }, i * 1000);
+            }
+        }
+
+        // Add floating animation CSS
+        const particleStyle = document.createElement('style');
+        particleStyle.textContent = `
+            @keyframes floatUp {
+                0% {
+                    opacity: 1;
+                    transform: translateY(0) rotate(0deg);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-100vh) rotate(360deg);
+                }
+            }
+        `;
+        document.head.appendChild(particleStyle);
+    </script>
+</body>
+</html>
+

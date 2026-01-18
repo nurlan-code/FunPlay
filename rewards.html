@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards - LuckyBot NZ Social Casino</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cyan: #00f0ff;
+            --purple: #b400ff;
+            --green: #00ff88;
+            --black: #0a0a0f;
+            --dark: #1a1a2e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--black);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 240, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(180, 0, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        .nav-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: currentColor;
+            transition: all 0.3s ease;
+        }
+
+        .nav-menu a:hover .nav-icon svg {
+            fill: var(--cyan);
+            filter: drop-shadow(0 0 5px var(--cyan));
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--cyan);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 80%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--cyan);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .page-header {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(180, 0, 255, 0.1));
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .rewards-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .reward-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--green);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            color: var(--green);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--cyan);
+            text-align: center;
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .reward-card {
+            background: rgba(26, 26, 46, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(180, 0, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reward-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.1) 0%, transparent 70%);
+            animation: rotate 15s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .reward-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--purple);
+            box-shadow: 0 15px 40px rgba(180, 0, 255, 0.4);
+        }
+
+        .reward-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reward-card h3 {
+            color: var(--purple);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reward-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .reward-amount {
+            font-size: 1.8rem;
+            color: var(--green);
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .leaderboard-section {
+            background: rgba(26, 26, 46, 0.3);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            margin-bottom: 4rem;
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .leaderboard-table th {
+            background: rgba(0, 240, 255, 0.1);
+            padding: 1rem;
+            text-align: left;
+            color: var(--cyan);
+            border-bottom: 2px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .leaderboard-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-table tr:hover {
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--cyan), var(--purple));
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            color: var(--black);
+        }
+
+        footer {
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--cyan);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--cyan);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .leaderboard-table {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="LuckyBot Logo">
+                <span>LuckyBot</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>Home</a></li>
+                <li><a href="games.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V7h2v2zm8-2v2h-2V7h2zm4 7.5c0 .83-.67 1.5-1.5 1.5S20 15.33 20 14.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm-4-4c0 .83-.67 1.5-1.5 1.5S16 11.33 16 10.5 16.67 9 17.5 9 19 9.67 19 10.5zM3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 14H5V5h14v14z"/></svg></span>🎮 Games</a></li>
+                <li><a href="bots.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></span>Bots</a></li>
+                <li><a href="rewards.html" class="active">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>Rewards</a></li>
+                <li><a href="support.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></span>Support</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <h1>💎 Rewards & Achievements</h1>
+        <p>Earn social coins, unlock achievements, and climb the leaderboards</p>
+    </div>
+
+    <div class="rewards-container">
+        <div class="reward-stats">
+            <div class="stat-card">
+                <div class="stat-icon">🪙</div>
+                <div class="stat-value">2,450</div>
+                <div class="stat-label">Social Coins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">15</div>
+                <div class="stat-label">Achievements</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value">#127</div>
+                <div class="stat-label">Leaderboard Rank</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value">7</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Daily Rewards</h2>
+        <div class="rewards-grid">
+            <div class="reward-card">
+                <div class="reward-icon">🎁</div>
+                <h3>Daily Login Bonus</h3>
+                <p>Claim your daily social coins just for logging in</p>
+                <div class="reward-amount">+100 Coins</div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">🎰</div>
+                <h3>Game Completion</h3>
+                <p>Complete any game session to earn rewards</p>
+                <div class="reward-amount">+50 Coins</div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">🤖</div>
+                <h3>Bot Interaction</h3>
+                <p>Challenge bots and earn bonus coins</p>
+                <div class="reward-amount">+75 Coins</div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">🏆</div>
+                <h3>Tournament Wins</h3>
+                <p>Compete and win in social tournaments</p>
+                <div class="reward-amount">+200 Coins</div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">📈</div>
+                <h3>Achievement Unlock</h3>
+                <p>Unlock new achievements and milestones</p>
+                <div class="reward-amount">+150 Coins</div>
+            </div>
+            <div class="reward-card">
+                <div class="reward-icon">💬</div>
+                <h3>Social Sharing</h3>
+                <p>Share your wins with friends</p>
+                <div class="reward-amount">+25 Coins</div>
+            </div>
+        </div>
+
+        <div class="leaderboard-section">
+            <h2 class="section-title">Top Players Leaderboard</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Social Coins</th>
+                        <th>Achievements</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="rank-badge">1</span></td>
+                        <td>NeonGamer</td>
+                        <td>45,280</td>
+                        <td>28</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-badge">2</span></td>
+                        <td>CyberPlayer</td>
+                        <td>42,150</td>
+                        <td>26</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-badge">3</span></td>
+                        <td>AIChampion</td>
+                        <td>38,900</td>
+                        <td>24</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-badge">4</span></td>
+                        <td>LuckyBotMaster</td>
+                        <td>35,600</td>
+                        <td>22</td>
+                    </tr>
+                    <tr>
+                        <td><span class="rank-badge">5</span></td>
+                        <td>NeonWizard</td>
+                        <td>32,400</td>
+                        <td>20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="daily-challenges-section" style="margin-top: 4rem; padding: 3rem 2rem; background: rgba(26, 26, 46, 0.3); border-radius: 20px; border: 1px solid rgba(0, 240, 255, 0.2);">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem; color: var(--cyan);">Daily Challenges</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                <div style="background: rgba(10, 10, 15, 0.8); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="color: var(--green); font-size: 1.3rem;">Win 10 Games</h3>
+                        <span style="background: rgba(0, 255, 136, 0.2); color: var(--green); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem;">+200 Coins</span>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 8px; margin-bottom: 0.5rem;">
+                        <div style="background: linear-gradient(135deg, var(--green), var(--cyan)); height: 100%; width: 60%; border-radius: 10px;"></div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">6/10 games won</p>
+                </div>
+                <div style="background: rgba(10, 10, 15, 0.8); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="color: var(--green); font-size: 1.3rem;">Challenge Alpha Bot</h3>
+                        <span style="background: rgba(0, 255, 136, 0.2); color: var(--green); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem;">+150 Coins</span>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 8px; margin-bottom: 0.5rem;">
+                        <div style="background: linear-gradient(135deg, var(--green), var(--cyan)); height: 100%; width: 100%; border-radius: 10px;"></div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Completed!</p>
+                </div>
+                <div style="background: rgba(10, 10, 15, 0.8); border: 2px solid rgba(0, 255, 136, 0.3); border-radius: 15px; padding: 1.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="color: var(--green); font-size: 1.3rem;">Daily Login</h3>
+                        <span style="background: rgba(0, 255, 136, 0.2); color: var(--green); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem;">+100 Coins</span>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 8px; margin-bottom: 0.5rem;">
+                        <div style="background: linear-gradient(135deg, var(--green), var(--cyan)); height: 100%; width: 100%; border-radius: 10px;"></div>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">Claimed today</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievements-gallery" style="margin-top: 4rem;">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 2rem; color: var(--purple);">Achievement Gallery</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem;">
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(0);">🏆</div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Champion</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(0);">⭐</div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Star Player</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(50%); opacity: 0.5;">🔥</div>
+                    <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Hot Streak</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(0);">🎯</div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Precision</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(50%); opacity: 0.5;">💎</div>
+                    <p style="color: rgba(255, 255, 255, 0.5); font-size: 0.9rem;">Diamond</p>
+                </div>
+                <div style="background: rgba(26, 26, 46, 0.6); border: 2px solid rgba(180, 0, 255, 0.3); border-radius: 15px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.borderColor='var(--purple)'" onmouseout="this.style.transform='scale(1)'; this.style.borderColor='rgba(180, 0, 255, 0.3)'">
+                    <div style="font-size: 3rem; margin-bottom: 0.5rem; filter: grayscale(0);">🤖</div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Bot Master</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="index.html">Home</a>
+                <a href="games.html">Games</a>
+                <a href="bots.html">Bots</a>
+                <a href="rewards.html">Rewards</a>
+            </div>
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <a href="terms.html">📜 Terms</a>
+                <a href="privacy.html">🔒 Privacy</a>
+                <a href="bot-ethics.html">🤖 Bot Ethics</a>
+                <a href="responsible-gaming.html">🧠 Responsible Gaming</a>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <a href="support.html">Support Center</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.social.html">Contact Us</a>
+            </div>
+            <div class="footer-section">
+                <h4>🇳🇿 NZ Compliance</h4>
+                <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">Social Casino - No Real Money. 18+ only.</p>
+            </div>
+        </div>
+        <div class="responsible-links" style="text-align: center; padding: 2rem 0; border-top: 1px solid rgba(0, 240, 255, 0.2); margin-top: 2rem;">
+            <a href="https://gamblinghelpline.co.nz/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Gambling Helpline New Zealand
+            </a>
+            <a href="https://responsiblegambling.org/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Responsible Gambling New Zealand
+            </a>
+            <a href="https://www.health.govt.nz/regulation-legislation/mental-health-and-addiction/gambling-act" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                New Zealand Ministry of Health – Gambling & Addiction
+            </a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 LuckyBot. All rights reserved. | New Zealand Social Casino Platform</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('navMenu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
+

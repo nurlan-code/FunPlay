@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Bot - LuckyBot NZ</title>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --cyan: #00f0ff; --purple: #b400ff; --green: #00ff88; --black: #0a0a0f; --dark: #1a1a2e; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--black); color: #fff; overflow-x: hidden; }
+        .bg-animation { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 20% 50%, rgba(0, 240, 255, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(180, 0, 255, 0.1) 0%, transparent 50%); animation: pulse 8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+        nav { position: fixed; top: 0; width: 100%; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 240, 255, 0.2); z-index: 1000; padding: 1rem 2rem; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; font-weight: bold; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; }
+        .logo img { height: 40px; width: auto; }
+        .nav-icon { width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin-right: 0.5rem; }
+        .nav-icon svg { width: 100%; height: 100%; fill: currentColor; transition: all 0.3s ease; }
+        .nav-menu a:hover .nav-icon svg { fill: var(--cyan); filter: drop-shadow(0 0 5px var(--cyan)); }
+        .nav-menu { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        .nav-menu a { color: #fff; text-decoration: none; padding: 0.5rem 1rem; transition: all 0.3s ease; }
+        .nav-menu a:hover { color: var(--cyan); }
+        .mobile-menu-btn { display: none; background: none; border: none; color: var(--cyan); font-size: 1.5rem; cursor: pointer; }
+        .page-header { margin-top: 80px; padding: 4rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(180, 0, 255, 0.1)); }
+        .page-header h1 { font-size: 3.5rem; margin-bottom: 1rem; background: linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .bot-detail { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+        .bot-profile { background: rgba(26, 26, 46, 0.6); backdrop-filter: blur(10px); border: 2px solid rgba(0, 240, 255, 0.3); border-radius: 20px; padding: 3rem; margin-bottom: 3rem; display: flex; gap: 3rem; align-items: center; }
+        .bot-avatar-large { width: 200px; height: 200px; background: linear-gradient(135deg, var(--cyan), var(--purple)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 6rem; animation: botPulse 3s ease-in-out infinite; box-shadow: 0 0 50px rgba(0, 240, 255, 0.5); }
+        @keyframes botPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .bot-info h2 { font-size: 2.5rem; color: var(--cyan); margin-bottom: 1rem; }
+        .bot-info p { color: rgba(255, 255, 255, 0.8); line-height: 1.8; font-size: 1.1rem; }
+        .features-section { margin-top: 3rem; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature-item { background: rgba(26, 26, 46, 0.6); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(0, 240, 255, 0.3); }
+        .feature-item h3 { color: var(--green); margin-bottom: 0.5rem; }
+        .play-btn { padding: 1rem 3rem; background: linear-gradient(135deg, var(--cyan), var(--purple)); border: none; color: var(--black); border-radius: 50px; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-block; margin-top: 2rem; }
+        .play-btn:hover { transform: scale(1.05); box-shadow: 0 5px 30px rgba(0, 240, 255, 0.5); }
+        footer { background: rgba(10, 10, 15, 0.95); backdrop-filter: blur(10px); border-top: 1px solid rgba(0, 240, 255, 0.2); padding: 3rem 2rem 1rem; margin-top: 4rem; }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-section h4 { color: var(--cyan); margin-bottom: 1rem; }
+        .footer-section a { color: rgba(255, 255, 255, 0.7); text-decoration: none; display: block; padding: 0.5rem 0; transition: all 0.3s ease; }
+        .footer-section a:hover { color: var(--cyan); }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(0, 240, 255, 0.2); color: rgba(255, 255, 255, 0.5); }
+        @media (max-width: 768px) {
+            .bot-profile { flex-direction: column; text-align: center; }
+            .nav-menu { display: none; }
+            .nav-menu.active { display: flex; position: absolute; top: 100%; left: 0; width: 100%; background: rgba(10, 10, 15, 0.98); flex-direction: column; padding: 1rem; }
+            .mobile-menu-btn { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="LuckyBot Logo">
+                <span>LuckyBot</span>
+            </a>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>Home</a></li>
+                <li><a href="games.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11 9H9V7h2v2zm8-2v2h-2V7h2zm4 7.5c0 .83-.67 1.5-1.5 1.5S20 15.33 20 14.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5zm-4-4c0 .83-.67 1.5-1.5 1.5S16 11.33 16 10.5 16.67 9 17.5 9 19 9.67 19 10.5zM3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm16 14H5V5h14v14z"/></svg></span>🎮 Games</a></li>
+                <li><a href="bots.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></span>Bots</a></li>
+                <li><a href="rewards.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>Rewards</a></li>
+                <li><a href="support.html">
+                    <span class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg></span>Support</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="page-header">
+        <h1>🤖 Alpha Bot</h1>
+        <p>Your Beginner-Friendly AI Companion</p>
+    </div>
+    <div class="bot-detail">
+        <div class="bot-profile">
+            <div class="bot-avatar-large">🤖</div>
+            <div class="bot-info">
+                <h2>Alpha Bot</h2>
+                <p>Alpha Bot is designed specifically for players who are new to social casino games. With predictable behavior patterns and a focus on learning, Alpha Bot helps you understand game mechanics, strategies, and techniques without the pressure of high-stakes competition. Perfect for building confidence and improving your skills at your own pace.</p>
+            </div>
+        </div>
+        <div class="features-section">
+            <h2 style="color: var(--cyan); font-size: 2rem; margin-bottom: 1rem;">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>Predictable Behavior</h3>
+                    <p>Alpha Bot uses consistent, learnable patterns that make it easy to understand and predict.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Learning Focus</h3>
+                    <p>Built with educational objectives in mind, helping you master game strategies step by step.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Helpful Tips</h3>
+                    <p>Provides in-game hints and suggestions to improve your understanding of social casino games.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>Gentle Difficulty</h3>
+                    <p>Starts easy and gradually increases challenge as you improve your skills.</p>
+                </div>
+            </div>
+            <a href="games.html" class="play-btn">Challenge Alpha Bot Now</a>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section"><h4>Quick Links</h4><a href="index.html">Home</a><a href="games.html">Games</a><a href="bots.html">Bots</a><a href="rewards.html">Rewards</a></div>
+            <div class="footer-section"><h4>Legal</h4><a href="terms.html">📜 Terms</a><a href="privacy.html">🔒 Privacy</a><a href="bot-ethics.html">🤖 Bot Ethics</a><a href="responsible-gaming.html">🧠 Responsible Gaming</a></div>
+            <div class="footer-section"><h4>Support</h4><a href="support.html">Support Center</a><a href="faq.html">FAQ</a><a href="contact.social.html">Contact Us</a></div>
+            <div class="footer-section"><h4>🇳🇿 NZ Compliance</h4><p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">Social Casino - No Real Money. 18+ only.</p></div>
+        </div>
+        <div class="responsible-links" style="text-align: center; padding: 2rem 0; border-top: 1px solid rgba(0, 240, 255, 0.2); margin-top: 2rem;">
+            <a href="https://gamblinghelpline.co.nz/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Gambling Helpline New Zealand
+            </a>
+            <a href="https://responsiblegambling.org/" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                Responsible Gambling New Zealand
+            </a>
+            <a href="https://www.health.govt.nz/regulation-legislation/mental-health-and-addiction/gambling-act" target="_blank" rel="noopener noreferrer" style="color: rgba(255, 255, 255, 0.7); text-decoration: none; margin: 0 1rem; display: inline-block; padding: 0.5rem 1rem; transition: all 0.3s ease;" onmouseover="this.style.color='var(--cyan)'" onmouseout="this.style.color='rgba(255, 255, 255, 0.7)'">
+                New Zealand Ministry of Health – Gambling & Addiction
+            </a>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2026 LuckyBot. All rights reserved. | New Zealand Social Casino Platform</p></div>
+    </footer>
+    <script>document.getElementById('mobileMenuBtn').addEventListener('click', function() { document.getElementById('navMenu').classList.toggle('active'); });</script>
+</body>
+</html>
+
