@@ -1217,21 +1217,6 @@
         </div>
     </div>
 
-    <!-- 18+ Age Verification Modal (shown after cookie acceptance) -->
-    <div id="ageVerification18Plus" class="verification-overlay">
-        <div class="verification-container">
-            <div class="verification-card">
-                <h2>🔞 Age Verification</h2>
-                <p>You must be 18 years or older to access this Social Casino Games platform. This platform is for entertainment purposes only. Virtual coins only.</p>
-                <p style="font-weight: bold; margin-top: 1.5rem;">Are you 18 years or older?</p>
-                <div class="verification-buttons">
-                    <button class="btn-yes" onclick="confirm18Plus()">Yes, I am 18+</button>
-                    <button class="btn-no" onclick="deny18Plus()">No, I am under 18</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
         // Age Verification
         function confirmAge() {
@@ -1248,25 +1233,11 @@
         function acceptCookies() {
             document.getElementById('cookiePolicy').style.display = 'none';
             localStorage.setItem('cookieAccepted', 'true');
-            // Show 18+ verification modal after cookie acceptance
-            setTimeout(function() {
-                document.getElementById('ageVerification18Plus').style.display = 'flex';
-            }, 500);
         }
 
         function declineCookies() {
             document.getElementById('cookiePolicy').style.display = 'none';
             localStorage.setItem('cookieAccepted', 'false');
-        }
-
-        // 18+ Age Verification Modal (shown after cookie acceptance)
-        function confirm18Plus() {
-            document.getElementById('ageVerification18Plus').style.display = 'none';
-            localStorage.setItem('age18Verified', 'true');
-        }
-
-        function deny18Plus() {
-            window.location.href = 'https://gamblinghelpline.co.nz/';
         }
 
         function showCookiePolicy() {
