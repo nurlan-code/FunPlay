@@ -1,8 +1,8 @@
-# LuckyBot - NZ Social Casino Games Platform
+# FunPlay - Premium Social Casino Platform
 
 ## 📋 Project Overview
 
-LuckyBot is a New Zealand-based Social Casino Games platform designed for entertainment and educational purposes. This is a complete social gaming website with AI-powered bots, social casino games, tournaments, and rewards systems.
+FunPlay is a premium Social Casino Platform designed for entertainment and educational purposes. This is a complete social gaming website with AI-powered bots, social casino games, tournaments, and rewards systems.
 
 ## 🎨 Design Theme
 
